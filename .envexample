@@ -1,0 +1,15 @@
+PORT=3000
+MONGO_URI=mongodb+srv://psantos26:Pablosantos.26@cluster0.0nahj.mongodb.net/albaranesDB?retryWrites=true&w=majority&appName=Cluster0
+JWT_SECRET=supersecretkey
+TOKEN_EXPIRES_IN=1d
+
+EMAIL=pablosantoshernandez26@gmail.com
+CLIENT_ID=86581551428-fn7mrajvoubmpdds5a52gu32evhbko1h.apps.googleusercontent.com
+CLIENT_SECRET=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
+REDIRECT_URI=https://developers.google.com/oauthplayground
+REFRESH_TOKEN=1//04a2em_bDywS5CgYIARAAGAQSNwF-L9IrvZ2IXJp1DjWAU0Bn4n9dVeW1YO8BieR-Q928At3qNjA26YQseEU1W5w5dcnMj6Np1XU
+
+SLACK_WEBHOOK_URL=https://hooks.slack.com/services/XXXXXXXX/XXXXXXXX/XXXXXXXX
+CLOUD_UPLOAD_URL=https://api.cloudinary.com/v1_1/your-cloud-name/upload
+CLOUD_API_KEY=your-api-key
+CLOUD_API_SECRET=your-secret
