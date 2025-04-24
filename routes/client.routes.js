@@ -1,17 +1,30 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const clientController = require("../controllers/client.controller");
-const auth = require("../middleware/auth.middleware");
+const clientController = require('../controllers/client.controller');
+const auth = require('../middleware/auth.middleware');
 
-router.use(auth);
+// Crear cliente
+router.post('/', auth, clientController.createClient);
 
-router.post("/", clientController.createClient);
-router.get("/", clientController.getClients);
-router.get("/archived", clientController.getArchivedClients);
-router.get("/:id", clientController.getClientById);
-router.put("/:id", clientController.updateClient);
-router.delete("/:id", clientController.deleteClient); // soft delete
-router.delete("/:id/hard", clientController.hardDeleteClient);
-router.patch("/:id/restore", clientController.restoreClient);
+// Actualizar cliente
+router.patch('/:id', auth, clientController.updateClient);
+
+// Obtener todos los clientes del usuario o su empresa
+router.get('/', auth, clientController.getClients);
+
+// Obtener un cliente por ID
+router.get('/:id', auth, clientController.getClientById);
+
+// Archivar (soft delete)
+router.patch('/:id/archive', auth, clientController.archiveClient);
+
+// Eliminar (hard delete)
+router.delete('/:id', auth, clientController.deleteClient);
+
+// Obtener archivados
+router.get('/archived/list', auth, clientController.getArchivedClients);
+
+// Recuperar cliente
+router.patch('/:id/recover', auth, clientController.recoverClient);
 
 module.exports = router;
