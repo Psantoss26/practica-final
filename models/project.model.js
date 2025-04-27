@@ -1,12 +1,11 @@
 const mongoose = require('mongoose');
 
-const clientSchema = new mongoose.Schema({
+const projectSchema = new mongoose.Schema({
   nombre: { type: String, required: true },
-  email: String,
-  telefono: String,
-  direccion: String,
+  descripcion: String,
   deleted: { type: Boolean, default: false },
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  clientId: { type: mongoose.Schema.Types.ObjectId, ref: 'Client', required: true },
   empresa: {
     nombre: String,
     cif: String,
@@ -14,4 +13,4 @@ const clientSchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
-module.exports = mongoose.model('Client', clientSchema);
+module.exports = mongoose.model('Project', projectSchema);

@@ -1,0 +1,128 @@
+### Registro de usuario
+curl -X POST http://localhost:3000/api/user/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "santoshernandezpablo@gmail.com",
+    "password": "1234"
+  }'
+
+###
+
+### Validación de email
+curl -X POST http://localhost:3000/api/user/validate \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "code": "CÓDIGO_RECIBIDO_POR_CORREO"
+  }'
+
+###
+
+### Login
+curl -X POST http://localhost:3000/api/user/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "santoshernandezpablo@gmail.com",
+    "password": "1234"
+  }'
+
+###
+
+### Completar datos personales
+curl -X PUT http://localhost:3000/api/user/register \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "nombre": "Nicolás",
+    "apellidos": "Padre del Cabezón",
+    "nif": "12345678A"
+  }'
+
+###
+
+### Completar datos de compañía
+curl -X PATCH http://localhost:3000/api/user/company \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "nombre": "PW2S Corp",
+    "cif": "B12345678",
+    "direccion": "Calle Backend 42"
+  }'
+
+###
+
+### Completar datos de compañía como autónomo
+curl -X PATCH http://localhost:3000/api/user/company \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "direccion": "Calle Backend 42",
+    "autonomo": true
+  }'
+
+###
+
+### Subir logo
+curl -X PATCH http://localhost:3000/api/user/logo \
+  -H "Authorization: Bearer $TOKEN" \
+  -F "logo=@/ruta/a/logo.png"
+
+###
+
+### Solicitar código para recuperación de contraseña
+curl -X POST http://localhost:3000/api/user/forgot-password \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "santoshernandezpablo@gmail.com"
+  }'
+
+###
+
+### Recuperar contraseña
+curl -X PATCH http://localhost:3000/api/user/reset-password \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "santoshernandezpablo@gmail.com",
+    "code": "CÓDIGO_CORREO",
+    "newPassword": "nuevaClave123"
+  }'
+
+###
+
+### Cambiar contraseña con sesión activa
+curl -X PATCH http://localhost:3000/api/user/change-password \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "oldPassword": "1234",
+    "newPassword": "9876"
+  }'
+
+###
+
+### Obtener información del usuario
+curl -X GET http://localhost:3000/api/user \
+  -H "Authorization: Bearer $TOKEN"
+
+###
+
+### Eliminar usuario (soft delete)
+curl -X DELETE http://localhost:3000/api/user \
+  -H "Authorization: Bearer $TOKEN"
+
+###
+
+### Eliminar usuario (hard delete)
+curl -X DELETE http://localhost:3000/api/user?soft=false \
+  -H "Authorization: Bearer $TOKEN"
+
+###
+
+### Invitar guest a la empresa
+curl -X POST http://localhost:3000/api/user/invite \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "guest@demo.com"
+  }'

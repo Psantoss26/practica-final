@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "nodemon server.js",
     "start": "node server.js",
-    "test": "jest"
+    "setup:testdata": "node tests/setupTestData.js",
+    "test": "cross-env NODE_ENV=test jest --runInBand"
   },
   "keywords": [],
   "author": "",
@@ -27,9 +28,12 @@
     "multer": "^1.4.5-lts.2",
     "nodemailer": "^6.10.1",
     "pdfkit": "^0.17.0",
-    "router": "^2.2.0"
+    "router": "^2.2.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "jest": "^29.7.0",
     "nodemon": "^3.1.9",
     "supertest": "^7.1.0"
