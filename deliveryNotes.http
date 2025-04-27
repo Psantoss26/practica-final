@@ -1,0 +1,45 @@
+### Crear albarán (horas o materiales)
+curl -X POST http://localhost:3000/api/deliverynote \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "tipo": "horas",
+    "clientId": "ID_DEL_CLIENTE",
+    "projectId": "ID_DEL_PROYECTO",
+    "items": [
+      {
+        "tipo": "hora",
+        "descripcion": "Trabajo técnico",
+        "cantidad": 5,
+        "horas": 5,
+        "precio": 20
+      },
+      {
+        "tipo": "material",
+        "descripcion": "Cable red",
+        "cantidad": 10,
+        "precio": 2
+      }
+    ]
+  }'
+
+### Obtener todos los albaranes
+curl -X GET http://localhost:3000/api/deliverynote \
+  -H "Authorization: Bearer $TOKEN"
+
+### Obtener un albarán por ID
+curl -X GET http://localhost:3000/api/deliverynote/ID_DEL_ALBARAN \
+  -H "Authorization: Bearer $TOKEN"
+
+### Eliminar albarán (solo si no firmado)
+curl -X DELETE http://localhost:3000/api/deliverynote/ID_DEL_ALBARAN \
+  -H "Authorization: Bearer $TOKEN"
+
+### Firmar albarán
+curl -X PATCH http://localhost:3000/api/deliverynote/sign/ID_DEL_ALBARAN \
+  -H "Authorization: Bearer $TOKEN" \
+  -F "firma=@ruta/a/archivo-firma.png"
+
+### Descargar PDF del albarán
+curl -X GET http://localhost:3000/api/deliverynote/pdf/ID_DEL_ALBARAN \
+  -H "Authorization: Bearer $TOKEN" --output albaran-ID.pdf

@@ -8,6 +8,7 @@ const deliveryNoteRoutes = require('./routes/deliveryNote.routes');
 const path = require('path');
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
+const errorMiddleware = require('./middleware/error.middleware');
 
 const app = express();
 
@@ -42,6 +43,8 @@ const swaggerSpec = swaggerJsdoc(options);
 
 app.use(cors());
 app.use(express.json());
+
+app.use(errorMiddleware)
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
