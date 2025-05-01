@@ -113,83 +113,89 @@ exports.deleteNote = async (req, res) => {
 
 // Firma de albarán
 exports.signNote = async (req, res) => {
-    const { id } = req.params;
-    const userId = req.user.id;
-  
-    try {
-      const note = await DeliveryNote.findById(id);
-      if (!note) return res.status(404).json({ error: 'Albarán no encontrado' });
-      if (note.signed) return res.status(400).json({ error: 'Ya está firmado' });
-  
-      const filePath = `/firmas/${req.file.filename}`;
-      note.firma = filePath;
-      note.signed = true;
-  
-      await note.save();
-      res.status(200).json({ message: '🖊️ Firma guardada correctamente', firma: filePath });
-    } catch (err) {
-      console.error('Error al firmar albarán:', err);
-      res.status(500).json({ error: 'Error interno' });
-    }
-  };
-  
-  // Generar PDF
-  exports.generatePdf = async (req, res) => {
-    const { id } = req.params;
-  
-    try {
-      const note = await DeliveryNote.findById(id)
-        .populate('userId', 'email')
-        .populate('clientId', 'nombre email direccion')
-        .populate('projectId', 'nombre');
-  
-      if (!note) return res.status(404).json({ error: 'Albarán no encontrado' });
-  
-      const doc = new PDFDocument();
-      const pdfName = `albaran-${note._id}.pdf`;
-      const outputPath = path.join(__dirname, `../pdfs/${pdfName}`);
-      const stream = fs.createWriteStream(outputPath);
-      doc.pipe(stream);
-  
-      // Título
-      doc.fontSize(20).text('Albarán de servicio', { align: 'center' });
-      doc.moveDown();
-  
-      // Datos generales
-      doc.fontSize(12).text(`Proyecto: ${note.projectId.nombre}`);
-      doc.text(`Cliente: ${note.clientId.nombre}`);
-      doc.text(`Correo cliente: ${note.clientId.email}`);
-      doc.text(`Dirección cliente: ${note.clientId.direccion}`);
-      doc.text(`Usuario creador: ${note.userId.email}`);
-      doc.text(`Fecha: ${new Date(note.fecha).toLocaleDateString()}`);
-      doc.moveDown();
-  
-      // Items
-      doc.fontSize(14).text('Items:');
-      note.items.forEach((item, index) => {
-        doc.fontSize(12).text(`${index + 1}. [${item.tipo}] ${item.descripcion} - Cantidad: ${item.cantidad} ${item.horas ? `- Horas: ${item.horas}` : ''} - Precio: ${item.precio || 0}`);
-      });
-  
-      doc.moveDown();
-  
-      // Firma si está disponible
-      if (note.signed && note.firma) {
-        doc.fontSize(14).text('Firma del cliente:');
-        const firmaPath = path.join(__dirname, '..', note.firma);
-        if (fs.existsSync(firmaPath)) {
+  const { id } = req.params;
+  const userId = req.user.id;
+
+  try {
+    const note = await DeliveryNote.findById(id);
+    if (!note) return res.status(404).json({ error: 'Albarán no encontrado' });
+    if (note.signed) return res.status(400).json({ error: 'Ya está firmado' });
+
+    const filePath = `/firmas/${req.file.filename}`;
+    note.firma = filePath;
+    note.signed = true;
+
+    await note.save();
+    res.status(200).json({ message: '🖊️ Firma guardada correctamente', firma: filePath });
+  } catch (err) {
+    console.error('Error al firmar albarán:', err);
+    res.status(500).json({ error: 'Error interno' });
+  }
+};
+
+// Generar PDF
+exports.generatePdf = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const note = await DeliveryNote.findById(id)
+      .populate('userId', 'email')
+      .populate('clientId', 'nombre email direccion')
+      .populate('projectId', 'nombre');
+
+    if (!note) return res.status(404).json({ error: 'Albarán no encontrado' });
+
+    const doc = new PDFDocument();
+    const pdfName = `albaran-${note._id}.pdf`;
+    const outputPath = path.join(__dirname, `../pdfs/${pdfName}`);
+    const stream = fs.createWriteStream(outputPath);
+    doc.pipe(stream);
+
+    // --- Contenido del PDF ---
+    doc.fontSize(20).text('Albarán de servicio', { align: 'center' });
+    doc.moveDown();
+
+    doc.fontSize(12).text(`Proyecto: ${note.projectId.nombre}`);
+    doc.text(`Cliente: ${note.clientId.nombre}`);
+    doc.text(`Correo cliente: ${note.clientId.email}`);
+    doc.text(`Dirección cliente: ${note.clientId.direccion}`);
+    doc.text(`Usuario creador: ${note.userId.email}`);
+    doc.text(`Fecha: ${new Date(note.fecha).toLocaleDateString()}`);
+    doc.moveDown();
+
+    doc.fontSize(14).text('Items:');
+    note.items.forEach((item, idx) => {
+      doc.fontSize(12).text(
+        `${idx + 1}. [${item.tipo}] ${item.descripcion} — Cantidad: ${item.cantidad}`
+        + (item.horas ? ` — Horas: ${item.horas}` : '')
+        + (item.precio ? ` — Precio: ${item.precio}` : '')
+      );
+    });
+    doc.moveDown();
+
+    // --- Insertar firma si existe ---
+    if (note.signed && note.firma) {
+      doc.fontSize(14).text('Firma del cliente:');
+      const firmaPath = path.join(__dirname, '..', note.firma);
+
+      if (fs.existsSync(firmaPath)) {
+        try {
           doc.image(firmaPath, { width: 150 });
-        } else {
-          doc.text('⚠️ Firma no encontrada');
+        } catch (err) {
+          console.warn('⚠️ Firma corrupta o inválida, se omite en el PDF:', err.message);
         }
+      } else {
+        doc.text('⚠️ Firma no encontrada');
       }
-  
-      doc.end();
-  
-      stream.on('finish', () => {
-        res.download(outputPath, pdfName);
-      });
-    } catch (err) {
-      console.error('Error al generar PDF:', err);
-      res.status(500).json({ error: 'Error interno al generar el PDF' });
     }
-  };
+
+    doc.end();
+
+    stream.on('finish', () => {
+      res.download(outputPath, pdfName);
+    });
+  } catch (err) {
+    console.error('Error al generar PDF:', err);
+    res.status(500).json({ error: 'Error interno al generar el PDF' });
+  }
+};
