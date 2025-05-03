@@ -1,0 +1,121 @@
+@TOKEN = tu_token_jwt_aquí
+
+### ✅ 1. Registro de usuario
+POST http://localhost:3000/api/user/register
+Content-Type: application/json
+
+{
+  "email": "santoshernandezpablo@gmail.com",
+  "password": "1234"
+}
+
+### ✅ 2. Validación de email
+PUT http://localhost:3000/api/user/validate
+Authorization: Bearer {{TOKEN}}
+Content-Type: application/json
+
+{
+  "code": "CÓDIGO_RECIBIDO_POR_CORREO"
+}
+
+### 🔐 3. Login
+POST http://localhost:3000/api/user/login
+Content-Type: application/json
+
+{
+  "email": "santoshernandezpablo@gmail.com",
+  "password": "1234"
+}
+
+### 🧍 4. Completar datos personales
+PUT http://localhost:3000/api/user/register
+Authorization: Bearer {{TOKEN}}
+Content-Type: application/json
+
+{
+  "nombre": "Nicolás",
+  "apellidos": "Padre del Cabezón",
+  "nif": "12345678A"
+}
+
+### 🏢 5. Completar datos de compañía
+PATCH http://localhost:3000/api/user/company
+Authorization: Bearer {{TOKEN}}
+Content-Type: application/json
+
+{
+  "nombre": "PW2S Corp",
+  "cif": "B12345678",
+  "direccion": "Calle Backend 42"
+}
+
+### 🏢 5b. Completar datos si es autónomo
+PATCH http://localhost:3000/api/user/company
+Authorization: Bearer {{TOKEN}}
+Content-Type: application/json
+
+{
+  "direccion": "Calle Backend 42",
+  "autonomo": true
+}
+
+### 📸 6. Subir logo (form-data)
+PATCH http://localhost:3000/api/user/logo
+Authorization: Bearer {{TOKEN}}
+Content-Type: multipart/form-data
+
+--boundary
+Content-Disposition: form-data; name="logo"; filename="logo.png"
+Content-Type: image/png
+
+< ./ruta/a/logo.png
+--boundary--
+
+### 📩 7. Solicitar código para recuperación de contraseña
+POST http://localhost:3000/api/user/forgot-password
+Content-Type: application/json
+
+{
+  "email": "santoshernandezpablo@gmail.com"
+}
+
+### 🔁 8. Recuperar contraseña con el código
+PATCH http://localhost:3000/api/user/reset-password
+Content-Type: application/json
+
+{
+  "email": "santoshernandezpablo@gmail.com",
+  "code": "CÓDIGO_CORREO",
+  "newPassword": "nuevaClave123"
+}
+
+### 🔐 9. Cambiar contraseña con sesión activa
+PATCH http://localhost:3000/api/user/change-password
+Authorization: Bearer {{TOKEN}}
+Content-Type: application/json
+
+{
+  "oldPassword": "1234",
+  "newPassword": "9876"
+}
+
+### 👤 10. Obtener información del usuario
+GET http://localhost:3000/api/user
+Authorization: Bearer {{TOKEN}}
+
+### 🗑️ 11. Eliminar usuario (soft delete)
+DELETE http://localhost:3000/api/user
+Authorization: Bearer {{TOKEN}}
+
+### 🗑️ 11b. Eliminar usuario (hard delete)
+DELETE http://localhost:3000/api/user?soft=false
+Authorization: Bearer {{TOKEN}}
+
+### 👥 12. Invitar guest a la empresa
+POST http://localhost:3000/api/user/invite
+Authorization: Bearer {{TOKEN}}
+Content-Type: application/json
+
+{
+  "email": "guest@demo.com"
+}

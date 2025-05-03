@@ -1,0 +1,50 @@
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MGRlYzRhZmI1NGNmMmRmNTg3ZjY2MSIsImVtYWlsIjoic2FudG9zaGVybmFuZGV6cGFibG9AZ21haWwuY29tIiwiaWF0IjoxNzQ1NzQyOTIyLCJleHAiOjE3NDU4MjkzMjJ9.PJ_bYaVz73i9sHjim-KNzOFS16bU90Qpi1yQzmufv9Q
+@idCliente = ID_DEL_CLIENTE
+
+### ✅ 1. Crear cliente
+POST http://localhost:3000/api/client
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "Cliente Ejemplo",
+  "email": "cliente@empresa.com",
+  "telefono": "123456789",
+  "direccion": "Calle Proyecto 123"
+}
+
+### 🔄 2. Actualizar cliente
+PATCH http://localhost:3000/api/client/{{idCliente}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "Cliente Modificado",
+  "email": "nuevo@email.com",
+  "telefono": "987654321",
+  "direccion": "Nueva dirección 42"
+}
+
+### 📥 3. Obtener todos los clientes (activos)
+GET http://localhost:3000/api/client
+Authorization: Bearer {{token}}
+
+### 🔍 4. Obtener un cliente por ID
+GET http://localhost:3000/api/client/{{idCliente}}
+Authorization: Bearer {{token}}
+
+### 🗂️ 5. Archivar cliente (soft delete)
+PATCH http://localhost:3000/api/client/{{idCliente}}/archive
+Authorization: Bearer {{token}}
+
+### ❌ 6. Eliminar cliente definitivamente (hard delete)
+DELETE http://localhost:3000/api/client/{{idCliente}}
+Authorization: Bearer {{token}}
+
+### 📦 7. Obtener clientes archivados
+GET http://localhost:3000/api/client/archived/list
+Authorization: Bearer {{token}}
+
+### 🔁 8. Recuperar cliente archivado
+PATCH http://localhost:3000/api/client/{{idCliente}}/recover
+Authorization: Bearer {{token}}

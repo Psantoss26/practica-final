@@ -1,0 +1,48 @@
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MGRlYzRhZmI1NGNmMmRmNTg3ZjY2MSIsImVtYWlsIjoic2FudG9zaGVybmFuZGV6cGFibG9AZ21haWwuY29tIiwiaWF0IjoxNzQ1NzQyOTIyLCJleHAiOjE3NDU4MjkzMjJ9.PJ_bYaVz73i9sHjim-KNzOFS16bU90Qpi1yQzmufv9Q
+@idCliente = ID_DEL_CLIENTE
+@idProyecto = ID_DEL_PROYECTO
+
+### ✅ 1. Crear un proyecto
+POST http://localhost:3000/api/project
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "Proyecto Backend PW2S",
+  "descripcion": "Desarrollo de API REST",
+  "clientId": "{{idCliente}}"
+}
+
+### 📝 2. Actualizar un proyecto
+PUT http://localhost:3000/api/project/{{idProyecto}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "Proyecto Backend PW2S (Actualizado)",
+  "descripcion": "Backend con nodemailer, auth y más"
+}
+
+### 📥 3. Obtener todos los proyectos del usuario o su empresa
+GET http://localhost:3000/api/project
+Authorization: Bearer {{token}}
+
+### 🔍 4. Obtener un proyecto por ID
+GET http://localhost:3000/api/project/{{idProyecto}}
+Authorization: Bearer {{token}}
+
+### 🗂️ 5. Archivar proyecto (soft delete)
+PATCH http://localhost:3000/api/project/{{idProyecto}}/archive
+Authorization: Bearer {{token}}
+
+### ❌ 6. Eliminar proyecto (hard delete)
+DELETE http://localhost:3000/api/project/{{idProyecto}}
+Authorization: Bearer {{token}}
+
+### 📦 7. Obtener proyectos archivados
+GET http://localhost:3000/api/project/archived/list
+Authorization: Bearer {{token}}
+
+### 🔁 8. Recuperar proyecto archivado
+PATCH http://localhost:3000/api/project/{{idProyecto}}/recover
+Authorization: Bearer {{token}}

@@ -1,0 +1,58 @@
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MGRlYzRhZmI1NGNmMmRmNTg3ZjY2MSIsImVtYWlsIjoic2FudG9zaGVybmFuZGV6cGFibG9AZ21haWwuY29tIiwiaWF0IjoxNzQ1NzQyOTIyLCJleHAiOjE3NDU4MjkzMjJ9.PJ_bYaVz73i9sHjim-KNzOFS16bU90Qpi1yQzmufv9Q
+@idCliente = ID_DEL_CLIENTE
+@idProyecto = ID_DEL_PROYECTO
+@idAlbaran = ID_DEL_ALBARAN
+
+### ✅ 1. Crear albarán con horas o materiales
+POST http://localhost:3000/api/deliverynote
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "tipo": "horas",
+  "clientId": "{{idCliente}}",
+  "projectId": "{{idProyecto}}",
+  "items": [
+    {
+      "tipo": "hora",
+      "descripcion": "Trabajo técnico",
+      "cantidad": 2,
+      "horas": 2,
+      "precio": 30
+    },
+    {
+      "tipo": "material",
+      "descripcion": "Cable UTP",
+      "cantidad": 10,
+      "precio": 1.5
+    }
+  ]
+}
+
+### 🔎 2. Listar todos los albaranes
+GET http://localhost:3000/api/deliverynote
+Authorization: Bearer {{token}}
+
+### 🔍 3. Obtener un albarán por ID
+GET http://localhost:3000/api/deliverynote/{{idAlbaran}}
+Authorization: Bearer {{token}}
+
+### ❌ 4. Eliminar un albarán (solo si no está firmado)
+DELETE http://localhost:3000/api/deliverynote/{{idAlbaran}}
+Authorization: Bearer {{token}}
+
+### ✍️ 5. Firmar albarán (subir firma)
+PATCH http://localhost:3000/api/deliverynote/sign/{{idAlbaran}}
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data
+
+--boundary
+Content-Disposition: form-data; name="firma"; filename="firma.png"
+Content-Type: image/png
+
+< ./ruta/a/firma.png
+--boundary--
+
+### 📄 6. Generar y descargar PDF del albarán
+GET http://localhost:3000/api/deliverynote/pdf/{{idAlbaran}}
+Authorization: Bearer {{token}}
