@@ -1,5 +1,6 @@
 const Joi = require('joi');
 
+// Validación de registro de usuario
 exports.validateRegister = (req, res, next) => {
   const schema = Joi.object({
     email: Joi.string().email().required(),
@@ -11,6 +12,7 @@ exports.validateRegister = (req, res, next) => {
   next();
 };
 
+// Validación del código de verificación por email
 exports.validateCode = (req, res, next) => {
   const schema = Joi.object({
     code: Joi.string().length(6).pattern(/^\d+$/).required()
@@ -21,20 +23,22 @@ exports.validateCode = (req, res, next) => {
   next();
 };
 
+// Validación de login de usuario
 exports.validateLogin = (req, res, next) => {
-    const Joi = require('joi');
-  
-    const schema = Joi.object({
-      email: Joi.string().email().required(),
-      password: Joi.string().min(8).required()
-    });
-  
-    const { error } = schema.validate(req.body);
-    if (error) return res.status(400).json({ error: error.details[0].message });
-  
-    next();
-  };
+  const Joi = require('joi');
 
+  const schema = Joi.object({
+    email: Joi.string().email().required(),
+    password: Joi.string().min(8).required()
+  });
+
+  const { error } = schema.validate(req.body);
+  if (error) return res.status(400).json({ error: error.details[0].message });
+
+  next();
+};
+
+// Validación de datos de usuario
 exports.validatePersonalData = (req, res, next) => {
   const Joi = require('joi');
 
@@ -50,6 +54,7 @@ exports.validatePersonalData = (req, res, next) => {
   next();
 };
 
+// Validación de datos de empresa o autónomo
 exports.validateCompanyData = (req, res, next) => {
   const Joi = require('joi');
 
