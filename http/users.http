@@ -1,4 +1,4 @@
-@TOKEN = tu_token_jwt_aquí
+@TOKEN = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MGRlYzRhZmI1NGNmMmRmNTg3ZjY2MSIsImVtYWlsIjoic2FudG9zaGVybmFuZGV6cGFibG9AZ21haWwuY29tIiwiaWF0IjoxNzQ1NzQyOTIyLCJleHAiOjE3NDU4MjkzMjJ9.PJ_bYaVz73i9sHjim-KNzOFS16bU90Qpi1yQzmufv9Q
 
 ### ✅ 1. Registro de usuario
 POST http://localhost:3000/api/user/register
@@ -34,7 +34,7 @@ Content-Type: application/json
 
 {
   "nombre": "Nicolás",
-  "apellidos": "Padre del Cabezón",
+  "apellidos": "Garcia",
   "nif": "12345678A"
 }
 
