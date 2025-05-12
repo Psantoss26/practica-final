@@ -13,7 +13,19 @@ exports.register = async (req, res) => {
       if (existingUser.isValidated) {
         return res.status(409).json({ error: 'Email ya registrado y validado' });
       }
-      // … lógica de reenvío de código para usuario no validado …
+      // Usuario existe pero no validado → reenviamos código
+      existingUser.emailCode = generateCode();
+      existingUser.emailAttempts = 0;
+      await existingUser.save();
+
+      // Envío de email
+      try {
+        await sendVerificationEmail(existingUser.email, existingUser.emailCode);
+      } catch (e) {
+        console.error('❌ Error reenviando email de validación:', e);
+        return res.status(500).json({ error: 'No se pudo reenviar el correo' });
+      }
+
       const token = signToken({ id: existingUser._id, email: existingUser.email });
       return res.status(200).json({
         message: 'Usuario ya existía no validado, código reenviado',
@@ -27,10 +39,9 @@ exports.register = async (req, res) => {
       });
     }
 
-    // Usuario nuevo
+    // Nuevo usuario
     const hashedPassword = await hash(password);
     const code = generateCode();
-
     const newUser = await User.create({
       email,
       password: hashedPassword,
@@ -40,6 +51,17 @@ exports.register = async (req, res) => {
       role: 'user'
     });
 
+    // Envía el correo de validación
+    try {
+      await sendVerificationEmail(newUser.email, code);
+      console.log(`📧 Código enviado a ${newUser.email}`);
+    } catch (e) {
+      console.error('❌ Error enviando email de validación:', e);
+      // Opcional: podrías eliminar al usuario si falla el envío
+      // await User.findByIdAndDelete(newUser._id);
+      return res.status(500).json({ error: 'No se pudo enviar el correo de validación' });
+    }
+
     const token = signToken({ id: newUser._id, email: newUser.email });
 
     console.log(`✅ Usuario creado:
@@ -47,10 +69,10 @@ exports.register = async (req, res) => {
     Código de verificación: ${code}
     Role: ${newUser.role}
     Validado: ${newUser.isValidated}
-`);
+    `);
 
     return res.status(201).json({
-      message: 'Usuario creado correctamente',
+      message: 'Usuario creado correctamente, código enviado al correo',
       user: {
         email: newUser.email,
         role: newUser.role,
