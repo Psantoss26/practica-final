@@ -2,6 +2,7 @@ const User = require('../models/user.model');
 const { hash, compare } = require('../utils/hashPassword');
 const { generateCode } = require('../utils/generateCode');
 const { signToken } = require('../utils/jwt');
+const { sendVerificationEmail } = require('../utils/emailService');
 
 exports.register = async (req, res) => {
   const { email, password } = req.body;

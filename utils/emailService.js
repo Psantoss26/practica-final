@@ -14,25 +14,18 @@ const createTransporter = async () => {
     refresh_token: process.env.REFRESH_TOKEN,
   });
 
-  const accessToken = await new Promise((resolve, reject) => {
-    oauth2Client.getAccessToken((err, token) => {
-      if (err) {
-        console.error("❌ Error al obtener accessToken:", err);
-        return reject("Error al obtener el token de acceso.");
-      }
-      resolve(token);
-    });
-  });
+  const accessToken = process.env.ACCESS_TOKEN;
+  if (!accessToken) throw new Error('Falta ACCESS_TOKEN en .env');
 
   const transporter = nodemailer.createTransport({
-    service: "gmail",
+    service: 'gmail',
     auth: {
-      type: "OAuth2",
+      type: 'OAuth2',
       user: process.env.EMAIL,
       clientId: process.env.CLIENT_ID,
       clientSecret: process.env.CLIENT_SECRET,
-      refreshToken: process.env.REFRESH_TOKEN,
-      accessToken,
+      refreshToken: process.env.REFRESH_TOKEN, // puedes dejarlo o quitarlo
+      accessToken
     },
   });
 
@@ -45,14 +38,14 @@ const sendVerificationEmail = async (email, code) => {
     await transporter.sendMail({
       from: `"PW2S App" <${process.env.EMAIL}>`,
       to: email,
-      subject: "Tu código de recuperación",
-      text: `Tu código de recuperación es: ${code}`,
-      html: `<p>Tu código de recuperación es: <strong>${code}</strong></p>`,
+      subject: "Tu código de verificación",
+      text: `Tu código de verificación es: ${code}`,
+      html: `<p>Tu código de verificación es: <strong>${code}</strong></p>`,
     });
     console.log(`📧 Código enviado a ${email}`);
   } catch (error) {
     console.error("❌ Error enviando el email:", error);
-    throw new Error("No se pudo enviar el correo de recuperación.");
+    throw new Error("No se pudo enviar el correo de verificación.");
   }
 };
 
