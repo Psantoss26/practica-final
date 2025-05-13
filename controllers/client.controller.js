@@ -7,13 +7,15 @@ exports.createClient = async (req, res) => {
   const userId = req.user.id;
 
   try {
+    // 1) Verificar usuario
     const user = await User.findById(userId);
     if (!user) return res.status(404).json({ error: 'Usuario no encontrado' });
 
-    // Verificar duplicado
+    // 2) Verificar duplicado
     const existing = await Client.findOne({ nombre, userId });
     if (existing) return res.status(409).json({ error: 'El cliente ya existe para este usuario' });
 
+    // 3) Crear cliente
     const client = await Client.create({
       nombre,
       email,
@@ -21,9 +23,16 @@ exports.createClient = async (req, res) => {
       direccion,
       userId,
       empresa: user.empresa || null,
+      projects: [] // inicializamos array de proyectos
     });
 
-    res.status(201).json({ message: '✅ Cliente creado', client });
+    // 4) Asociar cliente al usuario
+    user.clients = user.clients || [];
+    user.clients.push(client._id);
+    await user.save();
+
+    // 5) Responder
+    res.status(201).json({ message: '✅ Cliente creado y asociado al usuario', client });
   } catch (err) {
     console.error('Error al crear cliente:', err);
     res.status(500).json({ error: 'Error interno' });

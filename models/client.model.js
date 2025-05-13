@@ -11,7 +11,9 @@ const clientSchema = new mongoose.Schema({
     nombre: String,
     cif: String,
     direccion: String
-  }
+  },
+  clients: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Client' }]
+
 }, { timestamps: true });
 
 module.exports = mongoose.model('Client', clientSchema);
