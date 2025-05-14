@@ -24,7 +24,7 @@ const createTransporter = async () => {
       user: process.env.EMAIL,
       clientId: process.env.CLIENT_ID,
       clientSecret: process.env.CLIENT_SECRET,
-      refreshToken: process.env.REFRESH_TOKEN, // puedes dejarlo o quitarlo
+      refreshToken: process.env.REFRESH_TOKEN,
       accessToken
     },
   });
