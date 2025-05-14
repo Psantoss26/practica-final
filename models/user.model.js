@@ -22,10 +22,12 @@ const userSchema = new mongoose.Schema({
     nombre:     { type: String },
     cif:        { type: String },
     direccion:  { type: String }
-  }
+  },
+
+  clients: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Client' }]
 }, { timestamps: true });
 
-// --- Virtual para que tests hagan `u.code` y apunten a `emailCode` ---
+// Para que tests hagan `u.code` y apunten a `emailCode`
 userSchema.virtual('code').get(function(){
   return this.emailCode;
 });

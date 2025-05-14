@@ -12,7 +12,6 @@ const clientSchema = new mongoose.Schema({
     cif: String,
     direccion: String
   },
-  clients: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Client' }]
 
 }, { timestamps: true });
 
