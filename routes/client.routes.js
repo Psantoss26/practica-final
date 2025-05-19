@@ -92,6 +92,20 @@ router.get('/', auth, clientController.getClients);
 
 /**
  * @swagger
+ * /api/client/my:
+ *   get:
+ *     summary: Obtener los clientes del usuario autenticado
+ *     tags: [Cliente]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Lista de clientes del usuario
+ */
+router.get('/my', auth, clientController.getMyClients);
+
+/**
+ * @swagger
  * /api/client/{id}:
  *   get:
  *     summary: Obtener un cliente por ID

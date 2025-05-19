@@ -51,7 +51,7 @@ exports.register = async (req, res) => {
     });
 
     try {
-      await sendVerificationEmail(newUser.email, emailCode);
+      //await sendVerificationEmail(newUser.email, emailCode);
       console.log(`📧 Código enviado a ${newUser.email}`);
     } catch (e) {
       console.error('❌ No se pudo enviar el correo de validación:', e);

@@ -61,7 +61,7 @@ exports.updateClient = async (req, res) => {
   }
 };
 
-// Obtener todos los clientes del usuario o su empresa
+// Obtener todos los clientes
 exports.getClients = async (req, res) => {
   const userId = req.user.id;
 
@@ -75,6 +75,19 @@ exports.getClients = async (req, res) => {
     res.status(200).json({ clients });
   } catch (err) {
     console.error('Error al obtener clientes:', err);
+    res.status(500).json({ error: 'Error interno' });
+  }
+};
+
+// Obtener solo los clientes del usuario autenticado
+exports.getMyClients = async (req, res) => {
+  const userId = req.user.id;
+
+  try {
+    const clients = await Client.find({ userId, deleted: false });
+    res.status(200).json({ clients });
+  } catch (err) {
+    console.error('Error al obtener los clientes del usuario:', err);
     res.status(500).json({ error: 'Error interno' });
   }
 };

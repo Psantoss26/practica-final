@@ -33,9 +33,9 @@ const deliveryNoteSchema = new mongoose.Schema({
   fecha: { type: Date, default: Date.now },
 
   signed: { type: Boolean, default: false },
-  firma: { type: String },      // URL o hash IPFS
-  pdfUrl: { type: String },     // URL en la nube del PDF (opcional)
-  deleted: { type: Boolean, default: false } // Soft delete
+  firma: { type: String },
+  pdfUrl: { type: String },
+  deleted: { type: Boolean, default: false }
 }, { timestamps: true });
 
 module.exports = mongoose.model('DeliveryNote', deliveryNoteSchema);
