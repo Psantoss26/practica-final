@@ -80,7 +80,7 @@ router.patch('/:id', auth, clientController.updateClient);
  * @swagger
  * /api/client:
  *   get:
- *     summary: Obtener todos los clientes del usuario o de su empresa
+ *     summary: Obtener todos los clientes
  *     tags: [Cliente]
  *     security:
  *       - bearerAuth: []
